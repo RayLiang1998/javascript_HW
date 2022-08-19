@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+        font-family: OpenHuninn, serif;
+    }
+
+    .container {
+        text-align: center;
+        display: grid;
+        height: 100vh;
+        width:800px;
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+</style>
+</head>
+<body>
+    
+
+
+
+
+
+<div class="container">
+        
+        <div id="hw5" class="homework"><h1>月曆</h1>
+            <div class="grid">
+                <h2>Welcome</h2>
+                
+                <h2 style="color:#fff;background-color:#550;padding-left:'0.3em';border :'1px solid #000'">Information</h2>
+                
+                <div id="newDivT">
+                        <select id="idYear">
+                            <option></option>
+                        </select>年
+                        <select id="idMonth">
+                            <option></option>
+                        </select>月
+                        <select id="idDate">
+                            <option></option>
+                        </select>日
+                        
+                    </div>
+                    <p id="infoHint">日期選擇中</p>
+            </div>
+        </div>
+       
+    </div>
+
+
+    <script>
+        let newYear=document.querySelector("#idYear");
+        let newMonth=document.querySelector("#idMonth");
+        let newDate=document.querySelector("#idDate");
+        let newDivT=document.querySelector("#newDivT");
+
+        for (let y=2010; y<2030; y++) {
+            let yearOpt = document.createElement('option')
+            yearOpt.innerHTML = `${y}`
+            yearOpt.value = `${y}`
+            newYear.appendChild(yearOpt)
+        }
+
+        for (let m=1; m<13; m++) {
+            let monthOpt = document.createElement('option')
+            monthOpt.innerHTML = `${m}`
+            monthOpt.value = `${m}`
+            newMonth.appendChild(monthOpt)
+        }
+
+        for (let d=1; d<32; d++) {
+            let dateOpt = document.createElement('option')
+            dateOpt.innerHTML = `${d}`
+            dateOpt.value = `${d}`
+            dateOpt.hidden = true
+            newDate.appendChild(dateOpt)
+        }
+        newYear.addEventListener('change', selectChange)
+        newMonth.addEventListener('change', selectChange)
+
+        function selectChange() {
+            newDate.selectedIndex = 0
+            if (newYear.value == '' || newMonth.value == '') {
+                for (let i=1; i<newDate.children.length; i++) {
+                    newDate.children[i].hidden = true;
+                }
+            }
+            else {
+                let year = parseInt(newYear.value)
+                let month = parseInt(newMonth.value)
+                let numOfDays = new Date(year, month, 0).getDate()
+                for (let i=1; i<newDate.children.length; i++) {
+                    newDate.children[i].hidden = i > numOfDays;
+                    // console.log("------")
+                    // console.log(newDate.children[i].hidden)
+                }
+            }
+        }     
+
+
+        let newCalendar = document.createElement('table')
+        newCalendar.style.display = 'none'
+        newCalendar.style.position = 'relative'
+        newCalendar.style.top = '3em'
+        newCalendar.style.left = '2em'
+        newCalendar.style.width = '400px'
+        newCalendar.style.tableLayout = 'fixed'
+        newCalendar.id = 'calendar'
+        newDivT.appendChild(newCalendar)
+
+        let CalendarWeek = document.createElement('tr')
+        CalendarWeek.style.color = '#fff'
+        CalendarWeek.style.backgroundColor = '#550'
+        newCalendar.appendChild(CalendarWeek)
+
+        for (let i=0; i<7; i++) {
+            let CalendarWeekItem = document.createElement('th')
+            CalendarWeekItem.style.paddingTop = '0.25em'
+            CalendarWeekItem.style.paddingBottom = '0.25em'
+            switch (i) {
+                case 0:
+                    CalendarWeekItem.innerHTML = 'Sun'
+                    break
+                case 1:
+                    CalendarWeekItem.innerHTML = 'Mon'
+                    break
+                case 2:
+                    CalendarWeekItem.innerHTML = 'Tue'
+                    break
+                case 3:
+                    CalendarWeekItem.innerHTML = 'Wed'
+                    break
+                case 4:
+                    CalendarWeekItem.innerHTML = 'Thu'
+                    break
+                case 5:
+                    CalendarWeekItem.innerHTML = 'Fri'
+                    break
+                case 6:
+                    CalendarWeekItem.innerHTML = 'Sat'
+                    break
+            }
+            CalendarWeek.appendChild(CalendarWeekItem)
+        }
+
+        for (let i=0; i<6; i++) {
+            let CalendarDate = document.createElement('tr')
+            newCalendar.appendChild(CalendarDate)
+            
+            for (let j=0; j<7; j++) {
+                let CalendarDateItem = document.createElement('td')
+                CalendarDateItem.style.padding = '0.15em 1em 0.15em'
+                CalendarDateItem.style.textAlign = 'right'
+                CalendarDate.appendChild(CalendarDateItem)
+            }
+        }
+
+
+        newYear.addEventListener('change', selectDateChange)
+        newMonth.addEventListener('change', selectDateChange)
+        newDate.addEventListener('change', selectDateChange)
+
+        function selectDateChange() {
+            if (newDate.value == '') {
+                document.querySelector('#infoHint').innerHTML = '日期選擇中'
+                document.querySelector('#calendar').style.display = 'none'
+            } else {
+                document.querySelector('#infoHint').innerHTML = `您選擇的日期是 ${newYear.value} 年 ${newMonth.value} 月 ${newDate.value} 日`
+                document.querySelector('#calendar').style.display = 'block'
+                let year = parseInt(newYear.value)
+                let month = parseInt(newMonth.value)
+                let date = parseInt(newDate.value)
+                let startThisMonth = new Date(`${year}-${month}-1`)
+                console.log(startThisMonth)
+
+                let start = 1 - startThisMonth.getDay();
+                console.log(start)
+                let numOfDays = new Date(year, month, 0).getDate()
+                for (let item of document.querySelectorAll('#calendar td')) {
+                    item.style.cursor = 'pointer'
+                    item.style.color = start==date ? '#fff' : '#000'
+                    item.style.backgroundColor = start==date ? '#996' : '#fff'
+                    item.innerHTML = 1<=start && start<=numOfDays ? start : ''
+                    if (1<=start && start<=numOfDays) {
+                        item.addEventListener('mouseover', () => {
+                            item.style.backgroundColor = '#ad9'
+                        })
+                        item.addEventListener('mouseleave', () => {
+                            item.style.backgroundColor = item.innerHTML == newDate.value ? '#996' : '#fff'
+                        })
+                        item.addEventListener('click', clickCalendar)
+                    }
+                    start++
+                }
+            }
+        }
+
+        function clickCalendar() {
+            newDate.selectedIndex = this.innerHTML
+            // newDate.dispatchEvent(new Event('change'));
+            selectDateChange();
+        }
+    </script>
+</body>
+</html>

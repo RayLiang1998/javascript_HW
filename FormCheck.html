@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Form Check</title>
+    <style>
+        *{
+            margin:5px;
+        }
+    </style>
+</head>
+<body>
+    <label>Name:</label>
+    <input type="text" id="idnm" onchange="checkName()" size="6" value="" />
+    <span id="idsp1"></span><br />
+    <!--<input type="button" id="idbut" value="checkName" onclick="checkName();" /><hr />-->
+    <!--==========================================================================-->
+    <label>Password:</label>
+    <input type="password" id="idPwd" onchange="checkPwd()" size="6" value="123" />
+    <span id="idsp2"></span><br />
+    <!--<input type="button" id="idbut" value="checkPassword" onclick="checkPwd();" /><hr />-->
+    <!--==========================================================================-->
+    <label>Date:</label>
+    <input type="text" id="iddt"  onchange="checkDate()" size="10" value=""/>
+    <span id="idsp3"></span><br />
+    <!--<input type="button" id="idbut" value="checkDate" onclick="checkDate();" /><hr />-->
+    <!--==========================================================================-->
+
+    <script>
+        document.getElementById("idnm").addEventListener("blur", blur);
+        function checkName() {
+            let thenameObj = document.getElementById("idnm");
+            console.log(thenameObj);
+
+            let thenameObjVal = thenameObj.value;
+            console.log(thenameObjVal);
+
+            let sp1 = document.getElementById("idsp1");
+            let thenameObjValLen = thenameObjVal.length;
+
+            if (thenameObjVal == "")
+                sp1.innerHTML = "You must enter name";
+            else if (thenameObjValLen >= 2) {
+                let re = /^[\u4e00-\u9fff]+$/;
+                if (re.test(thenameObjVal))
+                    sp1.innerHTML = "Valid name";
+                else
+                    sp1.innerHTML = "Invalid name";
+            }
+
+            else
+                sp1.innerHTML = "Too short";
+
+        }
+
+        //=====================================================
+        document.getElementById("idPwd").addEventListener("blur", blur);
+        function checkPwd() {
+            let thePwdObj = document.getElementById("idPwd");
+            console.log(thePwdObj);
+
+            let thePwdObjVal = thePwdObj.value;
+            console.log(thePwdObjVal);
+            console.log(typeof thePwdObjVal);
+
+            let sp2 = document.getElementById("idsp2");
+            let thePwdObjValLen = thePwdObjVal.length;
+            let ch, flag1 = false, flag2 = false, flag3 = false;
+
+            if (thePwdObjVal == "")
+                sp2.innerHTML = "cannot null";
+            else if (thePwdObjValLen >= 6) {
+                for (let i = 0; i < thePwdObjValLen; i++) {
+                    ch = thePwdObjVal.charAt(i).toUpperCase();
+                    console.log(ch);
+                    if (ch >= "A" && ch <= "Z")
+                        flag1 = true;
+                    else if (ch >= "0" && ch <= "9")
+                        flag2 = true;
+                    if (flag1 && flag2) break;
+                }
+                if (flag1 && flag2)
+                    sp2.innerHTML = "correct";
+                else
+                    sp2.innerHTML = "incorrect";
+            }
+            else
+                sp2.innerHTML = "password length must >6";
+        }
+        //=============================================================
+        document.getElementById("iddt").addEventListener("blur", blur);
+        function checkDate() {
+
+            let thedateObj = document.getElementById("iddt");
+            let thedateObjVal = thedateObj.value;
+
+            let sp3 = document.getElementById("idsp3");
+            let thedateObjValLen = thedateObjVal.length;
+
+            if (thedateObjVal == "")
+                sp3.innerHTML = "You must enter date";
+            else {
+                let red = /^[0-9]{4,}[/][0-9]{1,2}[/][0-9]{2,}$/;
+                if (red.test(thedateObjVal)) {
+                    dref = new Date(thedateObjVal);
+                    let ddref = `${dref.getFullYear()}/${dref.getMonth() + 1}/${dref.getDate()}`
+                    console.log(dref);
+                    console.log(ddref);
+                    console.log(thedateObjVal);
+                    if (ddref == thedateObjVal)
+                        sp3.innerHTML = "Valid date";
+                    else
+                        sp3.innerHTML = "Valid format but invalid date";
+                }
+                else
+                    sp3.innerHTML = "Please enter correct date format (yyyy/mm/dd)";
+            }
+        }
+
+
+
+        
+    </script>
+</body>
+</html>
